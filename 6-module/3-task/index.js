@@ -90,6 +90,7 @@ import createElement from "../../assets/lib/create-element.js";
   }
 }*/
 export default class Carousel {
+
   constructor(slides) {
     this.slides = slides;
 
@@ -111,8 +112,12 @@ export default class Carousel {
         </div>
         `);
 
+<<<<<<< HEAD
     let slides = this.slides.map((item) =>
       createElement(`
+=======
+    let slides = this.slides.map(item => createElement(`
+>>>>>>> f6b14cc53347697bc1212af0cbe2b0fdaaece80e
       <div class="carousel__slide" data-id="${item.id}">
         <img
           src="/assets/images/carousel/${item.image}"
@@ -126,15 +131,22 @@ export default class Carousel {
             <img src="/assets/images/icons/plus-icon.svg" alt="icon" />
           </button>
         </div>
+<<<<<<< HEAD
       </div>`)
     );
 
     this.sub("inner").append(...slides);
+=======
+      </div>`));
+
+    this.sub('inner').append(...slides);
+>>>>>>> f6b14cc53347697bc1212af0cbe2b0fdaaece80e
 
     this.update();
   }
 
   addEventListeners() {
+<<<<<<< HEAD
     this.elem.onclick = ({ target }) => {
       let button = target.closest(".carousel__button");
       if (button) {
@@ -187,5 +199,58 @@ export default class Carousel {
     } else {
       this.sub("arrow_left").style.display = "";
     }
+=======
+    this.elem.onclick = ({target}) => {
+      let button = target.closest('.carousel__button');
+      if (button) {
+        let id = target.closest('[data-id]').dataset.id;
+
+        this.elem.dispatchEvent(new CustomEvent('product-add', {
+          detail: id,
+          bubbles: true
+        }));
+      }
+
+      if (target.closest('.carousel__arrow_right')) {
+        this.next();
+      }
+
+      if (target.closest('.carousel__arrow_left')) {
+        this.prev();
+      }
+    };
+>>>>>>> f6b14cc53347697bc1212af0cbe2b0fdaaece80e
   }
+
+  sub(ref) {
+    return this.elem.querySelector(`.carousel__${ref}`);
+  }
+
+  next() {
+    this.currentSlideNumber++;
+    this.update();
+  }
+
+  prev() {
+    this.currentSlideNumber--;
+    this.update();
+  }
+
+  update() {
+    let offset = -this.elem.offsetWidth * this.currentSlideNumber;
+    this.sub('inner').style.transform = `translateX(${offset}px)`;
+
+    if (this.currentSlideNumber == this.slides.length - 1) {
+      this.sub('arrow_right').style.display = 'none';
+    } else {
+      this.sub('arrow_right').style.display = '';
+    }
+
+    if (this.currentSlideNumber == 0) {
+      this.sub('arrow_left').style.display = 'none';
+    } else {
+      this.sub('arrow_left').style.display = '';
+    }
+  }
+
 }
