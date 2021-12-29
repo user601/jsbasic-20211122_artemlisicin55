@@ -1,16 +1,14 @@
 import createElement from "../../assets/lib/create-element.js";
-
 export default class Carousel {
   constructor(slides) {
     this.slides = slides;
     this.elem = document.createElement("div");
     this.elem.classList.add("carousel");
-    this.render(slides);
+    this.createCarousel(slides);
     setTimeout(() => this.initCarousel());
     this.elem.addEventListener("click", (event) => this.onClick(event));
   }
-
-  render(slides) {
+  createCarousel(slides) {
     let divArrowRight = document.createElement("div");
     this.elem.append(divArrowRight);
     divArrowRight.classList.add("carousel__arrow");
@@ -62,20 +60,19 @@ export default class Carousel {
     let arrowLeft = document.querySelector(".carousel__arrow_left");
     let arrowRight = document.querySelector(".carousel__arrow_right");
     let sliderWrapper = document.querySelector(".carousel__inner");
-    if (!sliderWrapper) {
-      return;
-    }
-    let counter = 1;
+
+    let counter = 0;
 
     arrowLeft.style.display = "none";
 
     let width = document.querySelector(".carousel__slide").offsetWidth;
-
+    //let slides = document.querySelectorAll(".carousel__slide");
+    let slidesAll = this.slides.length - 1;
     arrowLeft.addEventListener("click", () => {
       counter += width;
       sliderWrapper.style.transform = `translateX(${counter}px)`;
       arrowRight.style.display = "";
-      if (counter == 1) {
+      if (counter == 0) {
         arrowLeft.style.display = "none";
       }
     });
@@ -84,7 +81,7 @@ export default class Carousel {
       counter -= width;
       arrowLeft.style.display = "";
       sliderWrapper.style.transform = `translateX(${counter}px)`;
-      if (counter == -width * (slides.length - 1)) {
+      if (counter == -(width * slidesAll)) {
         arrowRight.style.display = "none";
       }
     });
