@@ -1,76 +1,168 @@
-import createElement from '../../assets/lib/create-element.js';
-
+import createElement from "../../assets/lib/create-element.js";
+///мое не работающее решение все работало но тесты не роходило
 export default class RibbonMenu {
+  /* constructor(categories) {
+    this.categories = categories;
+    this.elem = this.createRibbonMenu(categories);
+    this.highlighted;
+    let prev = this.elem.querySelector(".ribbon__arrow_left");
+    let next = this.elem.querySelector(".ribbon__arrow_right");
+    prev.addEventListener("click", () => this.prevScroll());
+    next.addEventListener("click", () => this.nextScroll());
+
+    let container = this.elem.querySelector(".ribbon__inner");
+    container.addEventListener("click", (event) => this.chooseCategory(event));
+  }
+  createRibbonMenu(categories) {
+    let ribbon = document.createElement("div");
+    ribbon.classList.add("ribbon");
+    let arrowLeft = `
+      <button class='ribbon__arrow ribbon__arrow_left'>
+        <img src='/assets/images/icons/angle-icon.svg' alt='icon'>
+      </button>`;
+    ribbon.insertAdjacentHTML("afterbegin", arrowLeft);
+    let ribbonInner = document.createElement("nav");
+    ribbonInner.classList.add("ribbon__inner");
+    ribbon.appendChild(ribbonInner);
+    categories.forEach((category) => {
+      let menuLink = `
+        <a href='#' class='ribbon__item' data-id='${category.id}'>${category.name}</a>`;
+
+      ribbonInner.insertAdjacentHTML("beforeend", menuLink);
+    });
+    let arrowRight = `
+      <button class='ribbon__arrow ribbon__arrow_right ribbon__arrow_visible'>
+        <img src='/assets/images/icons/angle-icon.svg' alt='icon'>
+      </button>`;
+    ribbon.insertAdjacentHTML("beforeend", arrowRight);
+
+    return ribbon;
+  }
+  //перелистывание в лево
+  prevScroll() {
+    let ribbonInner = this.elem.querySelector(".ribbon__inner");
+    let prev = this.elem.querySelector(".ribbon__arrow_left");
+    let next = this.elem.querySelector(".ribbon__arrow_right");
+
+    ribbonInner.scrollBy(-350, 0);
+
+    let scrollLeft = ribbonInner.scrollLeft;
+
+    if (scrollLeft === 0) {
+      prev.classList.remove("ribbon__arrow_visible");
+    }
+    next.classList.add("ribbon__arrow_visible");
+  }
+
+  nextScroll() {
+    let ribbonInner = this.elem.querySelector(".ribbon__inner");
+    let prev = this.elem.querySelector(".ribbon__arrow_left");
+    let next = this.elem.querySelector(".ribbon__arrow_right");
+
+    ribbonInner.scrollBy(350, 0);
+
+    let scrollWidth = ribbonInner.scrollWidth;
+    let scrollLeft = ribbonInner.scrollLeft;
+    let clientWidth = ribbonInner.clientWidth;
+    let scrollRight = scrollWidth - scrollLeft - clientWidth;
+
+    if (scrollRight < 1) {
+      next.classList.remove("ribbon__arrow_visible");
+    }
+    prev.classList.add("ribbon__arrow_visible");
+  }
+
+  chooseCategory(event) {
+    event.preventDefault();
+
+    let category = event.target.closest(".ribbon__item");
+
+    if (this.highlighted) {
+      this.highlighted.classList.remove("ribbon__item_active");
+    }
+    this.highlighted = category;
+    this.highlighted.classList.add("ribbon__item_active");
+
+    if (category) {
+      let ribbonSelect = new CustomEvent("ribbon-select", {
+        detail: category.dataset.id,
+        bubbles: true,
+      });
+      this.elem.dispatchEvent(ribbonSelect);
+    }
+  }
+}
+*/
   constructor(categories) {
     this.categories = categories;
 
     this.render();
     this.addEventListeners();
-    this.value = '';
+    this.value = "";
   }
 
   render() {
     this.elem = createElement(`
-      <div class="ribbon">
-        <button class="ribbon__arrow ribbon__arrow_left">
-          <img src="/assets/images/icons/angle-icon.svg" alt="icon" />
-        </button>
-        <nav class="ribbon__inner"></nav>
-        <button class="ribbon__arrow ribbon__arrow_right ribbon__arrow_visible">
-          <img src="/assets/images/icons/angle-icon.svg" alt="icon" />
-        </button>
-      </div>
-    `);
+    <div class="ribbon">
+      <button class="ribbon__arrow ribbon__arrow_left">
+        <img src="/assets/images/icons/angle-icon.svg" alt="icon" />
+      </button>
+      <nav class="ribbon__inner"></nav>
+      <button class="ribbon__arrow ribbon__arrow_right ribbon__arrow_visible">
+        <img src="/assets/images/icons/angle-icon.svg" alt="icon" />
+      </button>
+    </div>
+  `);
 
     for (let category of this.categories) {
       let categoryElem = createElement(`<a href="#" class="ribbon__item"></a>`);
       categoryElem.textContent = category.name; // insert as text, not as HTML!
       categoryElem.dataset.id = category.id;
-      this.elem.querySelector('.ribbon__inner').append(categoryElem);
+      this.elem.querySelector(".ribbon__inner").append(categoryElem);
     }
 
-    this.sub('item').classList.add('ribbon__item_active');
+    this.sub("item").classList.add("ribbon__item_active");
   }
 
   addEventListeners() {
-    this.sub('arrow_left').onclick = (event) => this.onArrowLeftClick(event);
-    this.sub('arrow_right').onclick = (event) => this.onArrowRightClick(event);
+    this.sub("arrow_left").onclick = (event) => this.onArrowLeftClick(event);
+    this.sub("arrow_right").onclick = (event) => this.onArrowRightClick(event);
 
     this.elem.onclick = (event) => {
-      let itemElem = event.target.closest('.ribbon__item');
+      let itemElem = event.target.closest(".ribbon__item");
       if (itemElem) {
         this.onItemClick(itemElem);
         event.preventDefault();
       }
     };
 
-    this.sub('inner').onscroll = (event) => this.onScroll(event);
+    this.sub("inner").onscroll = (event) => this.onScroll(event);
   }
 
   onArrowRightClick(event) {
     let offset = 350;
-    this.sub('inner').scrollBy(offset, 0);
+    this.sub("inner").scrollBy(offset, 0);
     this.updateArrows();
   }
 
   onArrowLeftClick(event) {
     let offset = 350;
-    this.sub('inner').scrollBy(-offset, 0);
+    this.sub("inner").scrollBy(-offset, 0);
     this.updateArrows();
   }
 
   onItemClick(itemElem) {
-    let oldActive = this.sub('item_active');
+    let oldActive = this.sub("item_active");
     if (oldActive) {
-      oldActive.classList.remove('ribbon__item_active');
+      oldActive.classList.remove("ribbon__item_active");
     }
 
-    itemElem.classList.add('ribbon__item_active');
+    itemElem.classList.add("ribbon__item_active");
 
     this.value = itemElem.dataset.id;
 
     this.elem.dispatchEvent(
-      new CustomEvent('ribbon-select', {
+      new CustomEvent("ribbon-select", {
         detail: this.value,
         bubbles: true,
       })
@@ -86,27 +178,29 @@ export default class RibbonMenu {
   }
 
   scrollRight() {
-    return this.sub('inner').scrollWidth - (this.sub('inner').scrollLeft + this.sub('inner').clientWidth);
+    return (
+      this.sub("inner").scrollWidth -
+      (this.sub("inner").scrollLeft + this.sub("inner").clientWidth)
+    );
   }
 
   scrollLeft() {
-    return this.sub('inner').scrollLeft;
+    return this.sub("inner").scrollLeft;
   }
 
   updateArrows() {
     if (this.scrollLeft() > 0) {
-      this.sub('arrow_left').classList.add('ribbon__arrow_visible');
+      this.sub("arrow_left").classList.add("ribbon__arrow_visible");
     } else {
-      this.sub('arrow_left').classList.remove('ribbon__arrow_visible');
+      this.sub("arrow_left").classList.remove("ribbon__arrow_visible");
     }
 
     let scrollRight = this.scrollRight();
     scrollRight = scrollRight < 1 ? 0 : scrollRight; // Это нужно для ситуации, когда скролл произошел с погрешностью
     if (scrollRight > 0) {
-      this.sub('arrow_right').classList.add('ribbon__arrow_visible');
+      this.sub("arrow_right").classList.add("ribbon__arrow_visible");
     } else {
-      this.sub('arrow_right').classList.remove('ribbon__arrow_visible');
+      this.sub("arrow_right").classList.remove("ribbon__arrow_visible");
     }
   }
-
 }
